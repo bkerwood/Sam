@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pinecone import Pinecone
 import os
 
@@ -14,10 +13,8 @@ async def ask(question: str):
     response = assistant.chat(messages=[
         {"role": "user", "content": question}
     ])
-    return {"answer": response.message.content[0].text}
+    return JSONResponse({"answer": response.message.content[0].text})
 
 @app.get("/")
 async def home():
     return FileResponse("index.html")
-
-app.mount("/static", StaticFiles(directory="static"), name="static")  
